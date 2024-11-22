@@ -41,10 +41,14 @@
         <div class="add-list">
           <a-list size="small" bordered :data-source="items">
             <template #renderItem="{ item,index }">
-              <a-list-item>
+              <a-list-item class="list-item" @click="chooseOn(item,index)">
                 <div class="record-box">
-                  <p class="name">尺寸：{{ item.w }}*{{ item.h }}</p>
-                  <a-button type="primary" danger size="small" @click="del(item,index)">删除</a-button>
+                  <p :class="['name',item.chooseOn?'active':'']">尺寸：{{ item.w }}*{{ item.h }}</p>
+                  <div class="btn-group">
+                    <a-button type="primary" size="small" @click="pos(item,index)" style="margin-right: 12px;">定位</a-button>
+                    <a-button type="primary" danger size="small" @click="del(item,index)">删除</a-button>
+                  </div>
+
                 </div>
               </a-list-item>
             </template>
@@ -78,7 +82,7 @@
   <div>
     <div v-for="(item, index) in items"
       :key="index"
-      class="draggable"
+      :class="['draggable',item.chooseOn?'chooseOn':'']"
       :style="{ left: item.position.x + 'px', top: item.position.y + 'px',width: item.w + 'px', height: item.h + 'px' }"
       @mousedown="startDrag($event, index)">
       {{ item.w }}*{{ item.h }}
@@ -180,6 +184,14 @@ import { ref, onMounted, onUnmounted } from 'vue';
     console.log('index',index);
     items.value.splice(index,1);
   }
+  let pos=(item,index)=>{
+    console.log('item',item);
+    console.log('index',index);
+    items.value.map(list=>{
+      list.chooseOn=false;
+    })
+    item.chooseOn=true;
+  }
 
   // 添加全局事件监听器
   onMounted(() => {
@@ -246,7 +258,13 @@ import { ref, onMounted, onUnmounted } from 'vue';
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    .name {margin: 0!important;}
+    .name {
+      margin: 0!important;
+      
+    }
+    .active {
+      color: #1677ff;
+    }
   }
   .sum-box {
     margin-top: 12px;
@@ -265,5 +283,8 @@ import { ref, onMounted, onUnmounted } from 'vue';
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  .chooseOn {
+    background: rgb(127, 194, 127);
   }
 </style>

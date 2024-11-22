@@ -1,0 +1,8 @@
+{
+  "productName": "圆崽测量",
+  "files": ["./electron/main.js", "./electron"],
+  "extraFiles": ["./videos", "./cvideo"], 
+  "directories": {
+    "output": "./buileder"
+  }
+}

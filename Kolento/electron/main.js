@@ -31,6 +31,9 @@ const createWindow = () => {
     })
     win.setMenu(null)
 
+    console.log('执行..........');
+    // win.loadFile("/electron/index.html");
+    // win.loadFile(path.resolve(__dirname, '/electron/index.html')) // 新增
     // win.loadURL('http://127.0.0.1:5173/')
     // win.loadFile(path.resolve(__dirname, '/dist/index.html')) // 新增
     // if (app.isPackaged) {
@@ -41,8 +44,8 @@ const createWindow = () => {
     //        //win.loadURL('http://localhost:5173/')
     //     // win.webContents.openDevTools()
     // }
-    // win.loadUrl(`file://${path.join(__dirname, '/dist/index.html')}`);
-    win.loadFile(path.resolve('../dist/index.html')) // 新增
+    win.loadFile(path.join(__dirname, 'index.html'));
+    // win.loadFile(path.resolve('../dist/index.html')) // 新增
     
     globalShortcut.register("CommandOrControl+Shift+i", function () {
         win.webContents.openDevTools();

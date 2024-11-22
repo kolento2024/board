@@ -14,7 +14,7 @@
     "start": "vite | electron .",
     "cbuild": "vite build && electron-builder",
     "lbuild": "vite build && node update.mjs",
-    "ebuild": "electron-builder"
+    "ebuild": "electron-builder build --config electron-builder.json"
   },
   "dependencies": {
     "@vitejs/plugin-legacy": "^5.4.3",
