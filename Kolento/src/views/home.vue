@@ -79,7 +79,7 @@
     <div v-for="(item, index) in items"
       :key="index"
       class="draggable"
-      :style="{ left: item.position.x + 'px', top: item.position.y + 'px',width: item.w-2 + 'px', height: item.h-2 + 'px' }"
+      :style="{ left: item.position.x + 'px', top: item.position.y + 'px',width: item.w + 'px', height: item.h + 'px' }"
       @mousedown="startDrag($event, index)">
       {{ item.w }}*{{ item.h }}
     </div>
