@@ -12,11 +12,11 @@
             :wrapper-col="{ span: 24 }"
             autocomplete="off">
             <a-form-item name="w" class="input-list" :rules="[{ required: true, message: '请填写宽度' }]" >
-              <a-input placeholder="请输入宽度" allowClear v-model:value="formData.w" @keyup.enter="addBoard" />
+              <a-input-number placeholder="请输入宽度" style="width: 150px;" allowClear v-model:value="formData.w" @keyup.enter="addBoard" />
             </a-form-item>
 
             <a-form-item label="" class="input-list" name="h" :rules="[{ required: true, message: '请填写高度' }]">
-              <a-input placeholder="请输入高度" allowClear v-model:value="formData.h" @keyup.enter="addBoard" />
+              <a-input-number placeholder="请输入高度" style="width: 150px;" allowClear v-model:value="formData.h" @keyup.enter="addBoard" />
             </a-form-item>
 
             <!-- <a-form-item class="input-list">
@@ -32,8 +32,9 @@
             </a-form-item> -->
 
             <a-form-item :wrapper-col="{ span: 24 }" class="input-list">
-              <a-button type="default" style="margin-right: 20px;" @click="reset">重置表单</a-button>
-              <a-button type="primary" @click="addBoard">添加元素</a-button>
+              <a-button type="default" style="margin-right: 12px;" @click="reset">重置</a-button>
+              <a-button type="primary" style="margin-right: 12px;" @click="addBoard">添加元素</a-button>
+              <!-- <a-button type="primary" @click="explain">说明</a-button> -->
             </a-form-item>
           </a-form>
         </div>
@@ -43,7 +44,7 @@
             <template #renderItem="{ item,index }">
               <a-list-item class="list-item" @click="chooseOn(item,index)">
                 <div class="record-box">
-                  <p :class="['name',item.chooseOn?'active':'']">尺寸：{{ item.w }}*{{ item.h }}</p>
+                  <p :class="['name',item.chooseOn?'active':'']">尺寸：{{ item.w }}cm*{{ item.h }}cm  ( {{ (item.w-0)/100 }}m*{{ (item.h-0)/100 }}m )</p>
                   <div class="btn-group">
                     <a-button type="primary" size="small" @click="pos(item,index)" style="margin-right: 12px;">定位</a-button>
                     <a-button type="primary" danger size="small" @click="del(item,index)">删除</a-button>
@@ -59,7 +60,7 @@
           <div class="sum-box">
             <p class="sum"><b>统计：</b></p>
             <p class="mj"><b>总面积 = </b>{{ allMj()[0] }} 平方厘米 = {{ allMj()[1] }} 平方米</p>
-            <p class="mj"><b>总周长 = </b>{{ allZc()[0] }} 厘米 = {{ allMj()[1] }} 米</p>
+            <p class="mj"><b>总周长 = </b>{{ allZc()[0] }} 厘米 = {{ allZc()[1] }} 米</p>
           </div>
         </div>
       </div>
@@ -73,10 +74,18 @@
     </div>
     <div class="board-show">
       <div class="board-example"></div>
-      <p class="size">尺寸：2.1米*6米</p>
-      <p class="size">面积：12.6平方米</p>
-      <p class="size">周长：16.2米</p>
+
     </div>
+  </div>
+
+  <div class="new-board">
+    <div class="bottom-form-box">
+      <a-input-number placeholder="请输入宽度" style="width: 150px;" allowClear v-model:value="bottom.w" @keyup.enter="addBoard" />
+      <a-input-number placeholder="请输入高度" style="width: 150px;margin-left: 12px;" allowClear v-model:value="bottom.h" @keyup.enter="addBoard" />
+      <!-- <a-button type="primary" style="margin-left: 12px;" @click="changeSize">修改板子尺寸</a-button> -->
+      <span style="margin-left: 12px;"> <b>（自定义板子尺寸）</b> 当前尺寸: 宽：{{ bottom.w }}厘米 长：{{ bottom.h }}厘米</span>
+    </div>
+    <div class="bottom-board" :style="{width:bottom.w+'px',height:bottom.h+'px'}"></div>
   </div>
 
   <div>
@@ -144,7 +153,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
     let mj = 0;
     if(items.value.length>0){
       items.value.map(list=>{
-        mj=mj+(list.w*list.h);
+        mj=mj+((list.w-0)*(list.h-0));
       })
     }
     return [mj,mj/10000];
@@ -154,7 +163,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
     let zc = 0;
     if(items.value.length>0){
       items.value.map(list=>{
-        zc=zc+(list.w+list.h)*2;
+        zc=zc+((list.w-0)+(list.h-0))*2;
       })
     }
     return [zc,zc/100];
@@ -174,6 +183,10 @@ import { ref, onMounted, onUnmounted } from 'vue';
     });
   }
 
+  let explain=()=>{
+
+  }
+
   let reset=()=>{
     formRef.value.resetFields();
   }
@@ -191,6 +204,14 @@ import { ref, onMounted, onUnmounted } from 'vue';
       list.chooseOn=false;
     })
     item.chooseOn=true;
+  }
+
+  let bottom = ref({
+    w:210,
+    h:600
+  })
+  let changeSize=()=>{
+    console.log('formData',formData.value);
   }
 
   // 添加全局事件监听器
@@ -224,7 +245,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
 
     .form-box {
       // width: 300px;
-      .input-list {margin-bottom: 20px;}
+      .input-list {margin:0 12px 20px 0;}
     }
   }
 
@@ -286,5 +307,22 @@ import { ref, onMounted, onUnmounted } from 'vue';
   }
   .chooseOn {
     background: rgb(127, 194, 127);
+  }
+
+  .new-board {
+    // width: 100%;
+    padding: 20px;
+    border-radius: 20px;
+    background: #fff;
+    margin:0 20px 20px;
+  }
+  .bottom-form-box {
+    display:flex;
+    align-items: center;
+  }
+  .bottom-board {
+    margin-top: 20px;
+    border:1px solid #333;
+    background: #fafafa;
   }
 </style>
